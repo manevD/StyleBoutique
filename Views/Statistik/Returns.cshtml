@@ -1,0 +1,308 @@
+﻿@model List<BoutiqueQuantity.Entities.Sale>
+
+<style>
+
+    .card {
+        border: none;
+        border-radius: 24px;
+        box-shadow: 0 4px 15px rgba(0,0,0,.08);
+    }
+
+    .table {
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .badge-status {
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+    }
+
+    .search-box {
+        background: white;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,.08);
+    }
+
+    .form-control {
+        height: 50px;
+        border-radius: 14px;
+    }
+
+    .btn {
+        border-radius: 14px;
+        height: 50px;
+    }
+
+</style>
+
+<div class="container mt-4 mb-5">
+
+    <!-- HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+
+                ↩ Поврати
+
+            </h2>
+
+            <small class="text-muted">
+
+                Историја на поврати
+
+            </small>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- FILTER -->
+
+    <div class="search-box mb-4">
+
+        <form method="get">
+
+            <div class="row g-3">
+
+                <div class="col-md-4">
+
+                    <input type="text"
+                           name="search"
+                           value="@Context.Request.Query["search"]"
+                           class="form-control"
+                           placeholder="Артикл / Боја / Величина" />
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <input type="date"
+                           name="from"
+                           value="@Context.Request.Query["from"]"
+                           class="form-control" />
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <input type="date"
+                           name="to"
+                           value="@Context.Request.Query["to"]"
+                           class="form-control" />
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <button class="btn btn-dark w-100">
+
+                        🔍 Филтрирај
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+
+    <!-- TABLE -->
+
+    <div class="card">
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>Артикл</th>
+
+                            <th>Боја</th>
+
+                            <th>Величина</th>
+
+                            <th>Продадено</th>
+
+                            <th>Вратено</th>
+
+                            <th>Останато</th>
+
+                            <th>Износ</th>
+
+                            <th>Причина</th>
+
+                            <th>Датум на продажба</th>
+
+                            <th>Датум на поврат</th>
+
+                            <th>Статус</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+
+                                    <td>
+
+                                        <div class="fw-bold">
+
+                                            @item.ProductName
+
+                                        </div>
+
+                                        <small class="text-muted">
+
+                                            @item.ProductCode
+
+                                        </small>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        @item.Color
+
+                                    </td>
+
+
+                                    <td>
+
+                                        @item.Size
+
+                                    </td>
+
+
+                                    <td>
+
+                                        @item.Quantity
+
+                                    </td>
+
+
+                                    <td class="text-danger fw-bold">
+
+                                        @item.ReturnedQuantity
+
+                                    </td>
+
+
+                                    <td class="text-success fw-bold">
+
+                                        @item.RealQuantity
+
+                                    </td>
+
+
+                                    <td>
+
+                                        @item.RealTotal ден.
+
+                                    </td>
+
+
+                                    <td>
+
+                                        @if (string.IsNullOrWhiteSpace(item.ReturnReason))
+                                        {
+                                            <span class="text-muted">
+
+                                                Нема причина
+
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            @item.ReturnReason
+                                        }
+
+                                    </td>
+
+
+                                    <td>
+
+                                        @item.CreatedAt
+
+                                    </td>
+                                    <td>
+                                        @if (item.ReturnedAt.HasValue)
+                                        {
+                                            @item.ReturnedAt.Value
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.RealQuantity == 0)
+                                        {
+                                            <span class="badge bg-danger badge-status">
+
+                                                Целосно вратено
+
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning text-dark badge-status">
+
+                                                Делумен поврат
+
+                                            </span>
+                                        }
+
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+
+                                <td colspan="11"
+                                    class="text-center py-5">
+
+                                    <h5 class="text-muted">
+
+                                        Нема поврати
+
+                                    </h5>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

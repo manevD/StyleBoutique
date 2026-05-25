@@ -1,0 +1,712 @@
+﻿@{
+    ViewData["Title"] = "Статистика";
+}
+
+<style>
+
+    .stat-card {
+        border: none;
+        border-radius: 24px;
+        padding: 25px;
+        color: white;
+        box-shadow: 0 5px 20px rgba(0,0,0,.1);
+    }
+
+    .stat-title {
+        font-size: 14px;
+        opacity: .8;
+    }
+
+    .stat-value {
+        font-size: 32px;
+        font-weight: 700;
+    }
+
+    .table {
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .card {
+        border: none;
+        border-radius: 24px;
+        box-shadow: 0 4px 15px rgba(0,0,0,.08);
+    }
+
+    .filter-card {
+        background: #fff;
+        border-radius: 24px;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,.08);
+    }
+
+    .form-control {
+        border-radius: 14px;
+        height: 50px;
+    }
+
+    .btn-filter {
+        height: 50px;
+        border-radius: 14px;
+    }
+
+    .badge-soft {
+        background: #f1f1f1;
+        color: #222;
+        padding: 8px 14px;
+        border-radius: 999px;
+    }
+
+</style>
+
+<div class="container mt-4 mb-5">
+
+    <!-- HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+
+                📊 Статистика
+
+            </h2>
+
+            <small class="text-muted">
+
+                BoutiqueQuantity Dashboard
+
+            </small>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- FILTER -->
+
+    <div class="filter-card mb-4">
+
+        <form method="post">
+
+            <div class="row g-3 align-items-end">
+
+                <div class="col-md-5">
+
+                    <label class="mb-2">
+
+                        Од датум
+
+                    </label>
+
+                    <input type="date"
+                           name="from"
+                           value="@Context.Request.Query["from"]"
+                           class="form-control" />
+
+                </div>
+
+                <div class="col-md-5">
+
+                    <label class="mb-2">
+
+                        До датум
+
+                    </label>
+
+                    <input type="date"
+                           name="to"
+                           value="@Context.Request.Query["to"]"
+                           class="form-control" />
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <button class="btn btn-dark w-100 btn-filter">
+
+                        🔍 Филтрирај
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+
+    <!-- TOP CARDS -->
+
+    <div class="row g-3">
+
+        <div class="col-6 col-md-3">
+
+            <div class="stat-card bg-dark">
+
+                <div class="stat-title">
+
+                    Вкупен промет
+
+                </div>
+
+                <div class="stat-value">
+
+                    @ViewBag.TotalRevenue
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="col-6 col-md-3">
+
+            <div class="stat-card bg-success">
+
+                <div class="stat-title">
+
+                    Вкупен профит
+
+                </div>
+
+                <div class="stat-value">
+
+                    @ViewBag.TotalProfit
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="col-6 col-md-3">
+
+            <div class="stat-card bg-primary">
+
+                <div class="stat-title">
+
+                    Продадени
+
+                </div>
+
+                <div class="stat-value">
+
+                    @ViewBag.TotalSales
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="col-6 col-md-3">
+
+            <div class="stat-card bg-danger">
+
+                <div class="stat-title">
+
+                    Вратени
+
+                </div>
+
+                <div class="stat-value">
+
+                    @ViewBag.TotalReturns
+
+                </div>
+
+            </div>
+
+        </div>
+        <div class="col-6 col-md-3">
+
+            <div class="stat-card bg-warning text-dark">
+
+                <div class="stat-title">
+
+                    Вредност на залиха
+
+                </div>
+
+                <div class="stat-value">
+
+                    @ViewBag.TotalSaleStockValue
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="col-6 col-md-3">
+
+            <div class="stat-card bg-info text-dark">
+
+                <div class="stat-title">
+
+                    Вложени средства
+
+                </div>
+
+                <div class="stat-value">
+
+                    @ViewBag.TotalPurchaseStockValue
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+ 
+
+    <!-- TODAY / WEEK / MONTH -->
+
+    <div class="row g-3 mt-2">
+
+        <div class="col-md-4">
+
+            <div class="card">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-3">
+
+                        📅 Денес
+
+                    </h5>
+
+                    <div class="mb-2">
+
+                        Промет:
+                        <strong>
+
+                            @ViewBag.TodayRevenue
+
+                        </strong>
+
+                    </div>
+
+                    <div class="mb-2">
+
+                        Профит:
+                        <strong>
+
+                            @ViewBag.TodayProfit
+
+                        </strong>
+
+                    </div>
+
+                    <div>
+
+                        Продадени:
+                        <strong>
+
+                            @ViewBag.TodayCount
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="col-md-4">
+
+            <div class="card">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-3">
+
+                        📆 Недела
+
+                    </h5>
+
+                    <div class="mb-2">
+
+                        Промет:
+                        <strong>
+
+                            @ViewBag.WeekRevenue
+
+                        </strong>
+
+                    </div>
+
+                    <div class="mb-2">
+
+                        Профит:
+                        <strong>
+
+                            @ViewBag.WeekProfit
+
+                        </strong>
+
+                    </div>
+
+                    <div>
+
+                        Продадени:
+                        <strong>
+
+                            @ViewBag.WeekCount
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="col-md-4">
+
+            <div class="card">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-3">
+
+                        🗓 Месец
+
+                    </h5>
+
+                    <div class="mb-2">
+
+                        Промет:
+                        <strong>
+
+                            @ViewBag.MonthRevenue
+
+                        </strong>
+
+                    </div>
+
+                    <div class="mb-2">
+
+                        Профит:
+                        <strong>
+
+                            @ViewBag.MonthProfit
+
+                        </strong>
+
+                    </div>
+
+                    <div>
+
+                        Продадени:
+                        <strong>
+
+                            @ViewBag.MonthCount
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- TOP PRODUCTS -->
+
+    <div class="card mt-4">
+
+        <div class="card-body">
+
+            <h5 class="fw-bold mb-4">
+
+                🔥 Најпродавани артикли
+
+            </h5>
+
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>Артикл</th>
+
+                            <th>Продадени</th>
+
+                            <th>Промет</th>
+
+                            <th>Профит</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @if (ViewBag.TopProducts != null)
+                        {
+                            foreach (var item in ViewBag.TopProducts)
+                            {
+                                <tr>
+
+                                    <td>
+
+                                        @item.Name
+
+                                    </td>
+
+                                    <td>
+
+                                        @item.Quantity
+
+                                    </td>
+
+                                    <td>
+
+                                        @item.Revenue
+
+                                    </td>
+
+                                    <td>
+
+                                        @item.Profit
+
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- TOP CATEGORIES -->
+
+    <div class="card mt-4">
+
+        <div class="card-body">
+
+            <h5 class="fw-bold mb-4">
+
+                🗂 Категории
+
+            </h5>
+
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>Категорија</th>
+
+                            <th>Продадени</th>
+
+                            <th>Промет</th>
+
+                            <th>Профит</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @if (ViewBag.TopCategories != null)
+                        {
+                            foreach (var item in ViewBag.TopCategories)
+                            {
+                                <tr>
+
+                                    <td>
+
+                                        @item.Name
+
+                                    </td>
+
+                                    <td>
+
+                                        @item.Quantity
+
+                                    </td>
+
+                                    <td>
+
+                                        @item.Revenue
+
+                                    </td>
+
+                                    <td>
+
+                                        @item.Profit
+
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- LAST SALES -->
+
+    <div class="card mt-4">
+
+        <div class="card-body">
+
+            <h5 class="fw-bold mb-4">
+
+                🧾 Последни продажби
+
+            </h5>
+
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>Артикл</th>
+
+                            <th>Боја</th>
+
+                            <th>Величина</th>
+
+                            <th>Продадено</th>
+
+                            <th>Вратено</th>
+
+                            <th>Активно</th>
+
+                            <th>Вкупно</th>
+
+                            <th>Датум</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @if (ViewBag.LastSales != null)
+                        {
+                            foreach (var sale in ViewBag.LastSales)
+                            {
+                                <tr>
+
+                                    <td>
+
+                                        @sale.ProductName
+
+                                    </td>
+
+                                    <td>
+
+                                        @sale.Color
+
+                                    </td>
+
+                                    <td>
+
+                                        @sale.Size
+
+                                    </td>
+
+                                    <td>
+
+                                        @sale.Quantity
+
+                                    </td>
+
+                                    <td>
+
+                                        @sale.ReturnedQuantity
+
+                                    </td>
+
+                                    <td>
+
+                                        @sale.RealQuantity
+
+                                    </td>
+
+                                    <td>
+
+                                        @sale.RealTotal
+
+                                    </td>
+
+                                    <td>
+
+                                        @sale.CreatedAt
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

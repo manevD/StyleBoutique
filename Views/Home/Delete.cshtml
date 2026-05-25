@@ -1,0 +1,110 @@
+﻿@model BoutiqueQuantity.Entities.Product
+
+<div class="container mt-4">
+
+    <div class="card shadow-sm border-0 rounded-4">
+
+        <div class="card-body">
+
+            <h3 class="fw-bold text-danger mb-4">
+
+                🗑 Избриши производ
+
+            </h3>
+
+
+            <div class="alert alert-warning">
+
+                Дали сте сигурни дека сакате да го избришете:
+
+                <strong>
+
+                    @Model.Name
+
+                </strong>
+
+                ?
+
+            </div>
+
+
+            <div class="mb-3">
+
+                <strong>
+
+                    Шифра:
+
+                </strong>
+
+                @Model.ProductCode
+
+            </div>
+
+
+            <div class="mb-3">
+
+                <strong>
+
+                    Категорија:
+
+                </strong>
+
+                @Model.Category.Name
+
+            </div>
+
+
+            <div class="mb-3">
+
+                <strong>
+
+                    Варијанти:
+
+                </strong>
+
+                @Model.Variants.Count
+
+            </div>
+
+
+            <form asp-action="DeleteConfirmed"
+                  method="post">
+
+                <input type="hidden"
+                       name="id"
+                       value="@Model.Id" />
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-2">
+
+                        <button class="btn btn-danger w-100">
+
+                            🗑 Потврди бришење
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="col-md-6 mb-2">
+
+                        <a asp-action="Details"
+                           asp-route-id="@Model.Id"
+                           class="btn btn-dark w-100">
+
+                            Назад
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>

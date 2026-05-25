@@ -1,0 +1,227 @@
+﻿@model ProductEditViewModel
+<style>
+    .card {
+        border-radius: 20px;
+        border: none;
+        box-shadow: 0 4px 15px rgba(0,0,0,.08);
+    }
+
+    .form-control, .form-select {
+        height: 55px;
+        border-radius: 14px;
+    }
+
+    .btn {
+        border-radius: 14px;
+        height: 50px;
+    }
+
+    .accordion-item {
+        border: none;
+        margin-bottom: 15px;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0,0,0,.07);
+    }
+
+    .inventoryRow {
+        background: #fafafa;
+        padding: 10px;
+        border-radius: 14px;
+        margin-bottom: 10px;
+    }
+
+    .accordion-body {
+        display: none;
+    }
+
+    .accordion-item.show-body .accordion-body {
+        display: block;
+    }
+
+    .deletedRow {
+        opacity: .3;
+        pointer-events: none;
+    }
+</style>
+
+<div class="container mt-3">
+    <form method="post">
+        <input asp-for="Id" hidden />
+
+        <div class="card">
+            <div class="card-body">
+                <h3>@(Model.Id == 0 ? "Нов артикл" : "Измени артикл")</h3>
+                <hr />
+                <div class="mb-3">
+                    <label>Шифра</label>
+                    <input asp-for="ProductCode" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label>Име</label>
+                    <input asp-for="Name" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label>Категорија</label>
+                    <select asp-for="CategoryId" asp-items="Model.Categories" class="form-select">
+                        <option>Избери</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <label>Набавна</label>
+                        <input asp-for="PurchasePrice" class="form-control" />
+                    </div>
+                    <div class="col-6">
+                        <label>Продажна</label>
+                        <input asp-for="SalePrice" class="form-control" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h4 class="mt-4">Варијанти</h4>
+
+        <div class="accordion mt-3" id="accordionVariants">
+            @for (int i = 0; i < Model.Variants.Count; i++)
+            {
+                <div class="accordion-item variant-row-item">
+                    <input type="hidden" name="Variants.Index" value="@i" />
+                    <input asp-for="Variants[i].Id" hidden />
+
+                    @* ПОПРАВЕНО: Скриен чекбокс за цела варијанта со соодветно value *@
+                    <input type="checkbox" name="Variants[@i].Delete" class="deleteVariantFlag d-none" value="true" />
+
+                    <div class="accordion-header p-3 d-flex gap-2">
+                        <input asp-for="Variants[i].Color" placeholder="Боја" class="form-control" />
+                        <button type="button" class="btn btn-danger" onclick="deleteVariant(this)">🗑</button>
+                    </div>
+                    <div class="accordion-body">
+                        <div id="sizes_@i">
+                            @for (int j = 0; j < Model.Variants[i].Inventories.Count; j++)
+                            {
+                                <div class="inventoryRow row">
+                                    <input type="hidden" name="Variants[@i].Inventories.Index" value="@j" />
+                                    <input asp-for="Variants[i].Inventories[j].Id" hidden />
+
+                                    @* ПОПРАВЕНО: Скриен чекбокс за големина *@
+                                    <input type="checkbox" name="Variants[@i].Inventories[@j].Delete" class="deleteFlag d-none" value="true" />
+
+                                    <div class="col-5">
+                                        <label>Величина</label>
+                                        <input asp-for="Variants[i].Inventories[j].Size" class="form-control" />
+                                    </div>
+                                    <div class="col-5">
+                                        <label>Количина</label>
+                                        <input asp-for="Variants[i].Inventories[j].Quantity" class="form-control" />
+                                    </div>
+                                    <div class="col-2 d-flex align-items-end">
+                                        <button type="button" class="btn btn-danger" onclick="deleteInventory(this)">X</button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <button type="button" class="btn btn-dark w-100" onclick="addSize(@i)">+ Додади величина</button>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <button type="button" class="btn btn-primary w-100 mt-3" id="addVariantButton">+ Нова варијанта</button>
+
+        <div class="row mt-4 mb-5">
+            <div class="col-6">
+                <a asp-action="Index" class="btn btn-secondary w-100">Назад</a>
+            </div>
+            <div class="col-6">
+                <button class="btn btn-success w-100">Сними</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    let variantCount = @Model.Variants.Count;
+
+    document.getElementById("addVariantButton").addEventListener("click", function(){
+        let accordion = document.getElementById("accordionVariants");
+        let index = variantCount;
+
+        let html = `
+        <div class="accordion-item variant-row-item">
+            <input type="hidden" name="Variants.Index" value="${index}"/>
+            <input type="hidden" name="Variants[${index}].Id" value="0"/>
+            <input type="checkbox" name="Variants[${index}].Delete" class="deleteVariantFlag d-none" value="true" />
+            <div class="accordion-header p-3 d-flex gap-2">
+                <input name="Variants[${index}].Color" placeholder="Боја" class="form-control"/>
+                <button type="button" class="btn btn-danger" onclick="deleteVariant(this)">🗑</button>
+            </div>
+            <div class="accordion-body">
+                <div id="sizes_${index}"></div>
+                <button type="button" class="btn btn-dark w-100" onclick="addSize(${index})">+ Додади величина</button>
+            </div>
+        </div>
+        `;
+        accordion.insertAdjacentHTML("beforeend", html);
+        variantCount++;
+    });
+
+    function addSize(variantIndex, defaultSize=""){
+        let container = document.getElementById(`sizes_${variantIndex}`);
+        let count = container.querySelectorAll(".inventoryRow").length;
+
+        let html = `
+        <div class="inventoryRow row">
+            <input type="hidden" name="Variants[${variantIndex}].Inventories.Index" value="${count}"/>
+            <input type="hidden" name="Variants[${variantIndex}].Inventories[${count}].Id" value="0"/>
+            <input type="checkbox" name="Variants[${variantIndex}].Inventories[${count}].Delete" class="deleteFlag d-none" value="true"/>
+            <div class="col-5">
+                <label>Величина</label>
+                <input name="Variants[${variantIndex}].Inventories[${count}].Size" value="${defaultSize}" class="form-control"/>
+            </div>
+            <div class="col-5">
+                <label>Количина</label>
+                <input type="number" name="Variants[${variantIndex}].Inventories[${count}].Quantity" value="0" class="form-control"/>
+            </div>
+            <div class="col-2 d-flex align-items-end">
+                <button type="button" class="btn btn-danger" onclick="deleteInventory(this)">X</button>
+            </div>
+        </div>
+        `;
+        container.insertAdjacentHTML("beforeend", html);
+    }
+
+    function deleteInventory(btn) {
+        const row = btn.closest(".inventoryRow");
+        // Го наоѓаме чекбоксот внатре во истиот row контејнер
+        const checkbox = row.querySelector(".deleteFlag");
+
+        if (checkbox) {
+            checkbox.checked = true; // Сетне за селектиран чекбокс (ASP.NET Core ова го чита како true)
+        }
+        row.style.display = "none";
+    }
+
+    function deleteVariant(btn) {
+        const item = btn.closest(".variant-row-item");
+        // Го наоѓаме чекбоксот кој е директно дете на оваа варијанта
+        const checkbox = item.querySelector(".deleteVariantFlag");
+
+        if (checkbox) {
+            checkbox.checked = true; // Сетне за селектиран чекбокс
+        }
+
+        item.style.display = "none";
+    }
+
+    document.addEventListener("click", function(e){
+        if(e.target.closest(".accordion-header")){
+            let item = e.target.closest(".accordion-item");
+            if(item.style.display === "none") return;
+
+            let all = document.querySelectorAll(".accordion-item");
+            all.forEach(i => { if(i !== item) i.classList.remove("show-body"); });
+            item.classList.toggle("show-body");
+        }
+    });
+</script>

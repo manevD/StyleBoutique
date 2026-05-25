@@ -1,0 +1,266 @@
+﻿<!DOCTYPE html>
+<html lang="mk">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>
+
+        @ViewData["Title"] - Style
+
+    </title>
+
+    <script type="importmap"></script>
+
+    <link rel="icon"
+          href="~/StyleStrumica.jpg" />
+
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/BoutiqueQuantity.styles.css"
+          asp-append-version="true" />
+
+
+
+    <style>
+
+        body {
+        background: #f8f9fa;
+        }
+
+        .navbar {
+        padding: 14px 0;
+        background: white !important;
+        }
+
+        .navbar-brand img {
+        height: 60px;
+        width: auto;
+        object-fit: contain;
+        }
+
+        .nav-link {
+        font-weight: 500;
+        color: #111 !important;
+        transition: .2s;
+        font-size: 15px;
+        }
+
+        .nav-link:hover {
+        color: #c8a84f !important;
+        }
+
+        .navbar-nav {
+        gap: 10px;
+        }
+
+        .footer {
+        background: white;
+        }
+
+        .navbar-toggler {
+        border: none;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <header>
+
+        <nav class="navbar navbar-expand-lg navbar-light border-bottom box-shadow mb-3">
+
+            <div class="container-fluid">
+
+                <!-- LOGO -->
+
+                <a class="navbar-brand"
+                   asp-area=""
+                   asp-controller="Home"
+                   asp-action="Index">
+
+                    <img src="~/styleTransparent.png"
+                         alt="Style Boutique Logo" />
+
+                </a>
+
+
+
+                <!-- MOBILE -->
+                @if (User.Identity != null &&
+                                User.Identity.IsAuthenticated)
+                {
+                    <button class="navbar-toggler"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#navbarContent"
+                            aria-controls="navbarContent"
+                            aria-expanded="false"
+                            aria-label="Toggle navigation">
+
+                        <span class="navbar-toggler-icon">
+
+                        </span>
+
+                    </button>
+                }
+
+
+
+                <!-- NAVBAR -->
+                @if (User.Identity != null &&
+                                User.Identity.IsAuthenticated)
+                {
+                    <div class="collapse navbar-collapse justify-content-center"
+                         id="navbarContent">
+
+                        <ul class="navbar-nav align-items-center">
+
+
+                            <!-- HOME -->
+
+                            <li class="nav-item">
+
+                                <a class="nav-link"
+                                   asp-controller="Home"
+                                   asp-action="Index">
+
+                                    Почетна
+
+                                </a>
+
+                            </li>
+
+
+
+                            <!-- SALES -->
+
+                            <li class="nav-item">
+
+                                <a class="nav-link"
+                                   asp-controller="Sale"
+                                   asp-action="Index">
+
+                                    Продажби
+
+                                </a>
+
+                            </li>
+
+
+
+                            <!-- STATISTICS -->
+
+                            <li class="nav-item">
+
+                                <a class="nav-link"
+                                   asp-controller="Statistik"
+                                   asp-action="Index">
+
+                                    Статистика
+
+                                </a>
+
+                            </li>
+
+
+
+                            <!-- RETURNS -->
+
+                            <li class="nav-item">
+
+                                <a class="nav-link"
+                                   asp-controller="Statistik"
+                                   asp-action="Returns">
+
+                                    Вратени производи
+
+                                </a>
+
+                            </li>
+
+
+
+                            <!-- LOGIN -->
+
+                            <li class="nav-item ms-lg-3">
+
+                                <partial name="_LoginPartial" />
+
+                            </li>
+
+                        </ul>
+
+                    </div>
+                }
+
+            </div>
+
+        </nav>
+
+    </header>
+
+
+
+    <!-- BODY -->
+
+    <div class="container">
+
+        <main role="main"
+              class="pb-3">
+
+            @RenderBody()
+
+        </main>
+
+    </div>
+
+
+
+    <!-- FOOTER -->
+
+    <footer class="border-top footer text-muted mt-5">
+
+        <div class="container py-3 text-center">
+
+            &copy; @DateTime.Now.Year - Style Boutique
+
+        </div>
+
+    </footer>
+
+
+    <!-- SCRIPTS -->
+
+    <script src="~/lib/jquery/dist/jquery.min.js">
+
+    </script>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js">
+
+    </script>
+
+    <script src="~/js/site.js"
+            asp-append-version="true">
+
+    </script>
+
+    @await RenderSectionAsync(
+    "Scripts",
+    required: false)
+
+</body>
+
+</html>

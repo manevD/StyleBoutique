@@ -1,0 +1,212 @@
+﻿@model List<BoutiqueQuantity.Entities.Sale>
+
+<style>
+
+    .card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,.08);
+    }
+
+    .btn {
+        border-radius: 12px;
+    }
+
+</style>
+
+<div class="container mt-4">
+
+    <div class="card">
+
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <div>
+
+                    <h3 class="fw-bold">
+
+                        🧾 Продажби
+
+                    </h3>
+
+                    <small class="text-muted">
+
+                        Историја на продажби
+
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <form method="get" class="mb-4">
+
+                <div class="row g-2">
+
+                    <div class="col-md-4">
+
+                        <input type="text"
+                               name="search"
+                               value="@Context.Request.Query["search"]"
+                               class="form-control"
+                               placeholder="Пребарај..." />
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <input type="date"
+                               name="from"
+                               value="@Context.Request.Query["from"]"
+                               class="form-control" />
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <input type="date"
+                               name="to"
+                               value="@Context.Request.Query["to"]"
+                               class="form-control" />
+
+                    </div>
+
+                    <div class="col-md-2">
+
+                        <button class="btn btn-dark w-100">
+
+                            🔍
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>Артикл</th>
+
+                            <th>Боја</th>
+
+                            <th>Величина</th>
+
+                            <th>Продадено</th>
+
+                            <th>Вратено</th>
+
+                            <th>Активно</th>
+
+                            <th>Вкупно</th>
+
+                            <th>Датум</th>
+
+                            <th></th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var sale in Model)
+                        {
+                            <tr>
+
+                                <td>
+
+                                    @sale.ProductName
+
+                                </td>
+
+                                <td>
+
+                                    @sale.Color
+
+                                </td>
+
+                                <td>
+
+                                    @sale.Size
+
+                                </td>
+
+                                <td>
+
+                                    @sale.Quantity
+
+                                </td>
+
+                                <td>
+
+                                    @sale.ReturnedQuantity
+
+                                </td>
+
+                                <td>
+
+                                    @sale.RealQuantity
+
+                                </td>
+
+                                <td>
+
+                                    @sale.RealTotal ден.
+
+                                </td>
+
+                                <td>
+
+                                    @sale.CreatedAt
+
+                                </td>
+
+                                <td>
+
+                                    @if (sale.RealQuantity > 0)
+                                    {
+                                        <a asp-controller="Sale"
+                                           asp-action="Return"
+                                           asp-route-id="@sale.Id"
+                                           class="btn btn-danger btn-sm">
+
+                                            ↩ Поврат
+
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">
+
+                                            Целосно вратено
+
+                                        </span>
+                                    }
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
